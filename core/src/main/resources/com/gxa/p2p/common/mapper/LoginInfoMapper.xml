@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gxa.p2p.common.mapper.LogininfoMapper">
+<mapper namespace="com.gxa.p2p.common.mapper.LoginInfoMapper">
   <resultMap id="BaseResultMap" type="com.gxa.p2p.common.pojo.LoginInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
@@ -10,6 +10,9 @@
     <result column="admin" jdbcType="BIT" property="admin" />
   </resultMap>
 
+    <sql id="base_column">
+  	id, username, password, state, userType
+   </sql>
 
 
   <select id="selectCountByUsername" parameterType="java.lang.String" resultType="int">
@@ -35,9 +38,19 @@
   </insert>
 
   <select id="select" resultMap="BaseResultMap">
-      select username,password
+      select
+      <include refid="base_column"/>
       from `logininfo`
       where username = #{username}
       and password = #{password}
   </select>
+
+    <select id="login" resultMap="BaseResultMap">
+        select
+        <include refid="base_column"/>
+        from `logininfo`
+        where  username = #{username}
+        and password = #{password}
+        and usertype = #{usertype}
+    </select>
 </mapper>

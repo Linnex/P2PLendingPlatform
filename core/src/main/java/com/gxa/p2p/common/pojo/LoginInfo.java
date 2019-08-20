@@ -2,6 +2,9 @@ package com.gxa.p2p.common.pojo;
 
 public class LoginInfo {
     public static final Byte STATE_NORMAL = 0;
+    public static final int USER_MGR = 0;
+    public static final int USER_WEB = 1;
+    private int usertype = 0; //用户类型（前台、后台）
 
     private Long id;
 
@@ -11,9 +14,7 @@ public class LoginInfo {
 
     private Byte state;
 
-    private Byte usertype;
-
-    private Boolean admin;
+    private int admin;
 
     public Long getId() {
         return id;
@@ -47,19 +48,19 @@ public class LoginInfo {
         this.state = state;
     }
 
-    public Byte getUsertype() {
+    public int getUsertype() {
         return usertype;
     }
 
-    public void setUsertype(Byte usertype) {
+    public void setUsertype(int usertype) {
         this.usertype = usertype;
     }
 
-    public Boolean getAdmin() {
+    public int getAdmin() {
         return admin;
     }
 
-    public void setAdmin(Boolean admin) {
+    public void setAdmin(int admin) {
         this.admin = admin;
     }
 }

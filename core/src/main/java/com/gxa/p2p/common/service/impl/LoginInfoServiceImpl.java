@@ -1,15 +1,24 @@
 package com.gxa.p2p.common.service.impl;
 
-import com.gxa.p2p.common.mapper.LogininfoMapper;
+import com.gxa.p2p.common.mapper.LoginInfoMapper;
+import com.gxa.p2p.common.pojo.Account;
 import com.gxa.p2p.common.pojo.LoginInfo;
+import com.gxa.p2p.common.service.IAccountService;
 import com.gxa.p2p.common.service.ILoginInfoService;
+import com.gxa.p2p.common.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Service
 public class LoginInfoServiceImpl implements ILoginInfoService {
     @Autowired
-    private LogininfoMapper logininfoMapper;
+    private LoginInfoMapper loginInfoMapper;
+
+    @Autowired
+    private IAccountService iAccountService;
 
     /**
      * 检查用户名是否已存在
@@ -20,7 +29,7 @@ public class LoginInfoServiceImpl implements ILoginInfoService {
     @Override
     public int checkUsername(String username) {
         System.out.println("已进入LoginInfoServiceImpl的checkUsername方法");
-        int count = logininfoMapper.selectCountByUsername(username);
+        int count = loginInfoMapper.selectCountByUsername(username);
         return count;
     }
 
@@ -46,10 +55,17 @@ public class LoginInfoServiceImpl implements ILoginInfoService {
             li.setUsername(username);
             li.setPassword(password);
             li.setState(LoginInfo.STATE_NORMAL);
-            logininfoMapper.insert(li);
+            loginInfoMapper.insert(li);
+
+            // 初始化账户信息Account
+            Long id = li.getId();
+            Account account = new Account();
+            account.setId(id);
+            iAccountService.add(account);
+
         } else {
             // 如果存在,直接抛错
-            throw new RuntimeException("用户名asdassda存在!");
+            throw new RuntimeException("用户名已存在!");
         }
 
     }
@@ -60,13 +76,17 @@ public class LoginInfoServiceImpl implements ILoginInfoService {
      * @param password
      */
     @Override
-    public LoginInfo login(String username, String password) {
-        LoginInfo li = logininfoMapper.select(username, password);
-        if(li!=null){
-            return li;
-        }else {
-            throw new RuntimeException("用户名不存在仔仔!");
+    public LoginInfo login(String username, String password, HttpServletRequest request, int usertype) {
+        LoginInfo loginInfo = loginInfoMapper.login(username,password,usertype);
+
+        if (loginInfo != null) {
+            /* 将登录用户的数据，通过UserContext工具类，存放至session*/
+            UserContext.putLoginInfo(loginInfo);
+        } else {
+//            iplog.setState(Iplog.LOGIN_FAILED);
         }
+        return loginInfo;
+
     }
 
 

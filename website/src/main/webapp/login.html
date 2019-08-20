@@ -31,7 +31,7 @@
 			success:function(data){
 				if(data.success){
 					$.messager.confirm("提示","登陆成功,点击确定进入个人中心",function(){
-						window.location.href="/personal.do";
+						window.location.href="./personal.do";
 					});
 				}else{
 					$.messager.popup(data.msg)
@@ -44,7 +44,7 @@
 				password:"required"
 			},
 			messages:{
-				username:"用户名不能为空!",
+				username:"用户名不能为空！",
 				password:"密码不能为空!"
 			},
 			errorClass:"text-danger",
@@ -67,8 +67,8 @@
 	<div class="el-header" >
 		<div class="container" style="position: relative;">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/">首页</a></li>
-				<li><a href="/login.html">登录</a></li>
+				<li><a href="./">首页</a></li>
+				<li><a href="./login.html">登录</a></li>
 				<li><a href="#">帮助</a></li>
 			</ul>
 		</div>
